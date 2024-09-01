@@ -351,7 +351,7 @@ function loadTeamRequest(request)
       -- log(generateModelScriptUI(true, models))
       self.UI.setXmlTable({generateUIDefaults(), generateModelScriptUI(true, models), generateTeamSelectUI(true, true)})
     else
-      broadcastToOwner("That code is not valid. Please copy your roster code from [b]datateam.app/encode[/b].")
+      broadcastToOwner("That code is not valid. Please copy your roster code from [b]datateamapp.azurewebsites.net/Encode[/b].")
       self.UI.setXmlTable({generateUIDefaults(), generateTeamSelectUI(true, false)})
     end
   end
@@ -1125,28 +1125,31 @@ function makeOperative(target, id)
       if inf.modelType then
         table.insert(desc, inf.modelType)
       end
-      table.insert(desc, string.format("[D36B3E][[84E680]M[-] [ffffff]%s[-]] [[84E680]APL[-] [ffffff]%s[-]] [[84E680]GA[-] [ffffff]%s[-]]\n[[84E680]DF[-] [ffffff]%s[-]] [[84E680]SV[-] [ffffff]%s[-]] [[84E680]W[-] [ffffff]%s[-]][-]",
-        inf.stats.M or "X", inf.stats.APL or "X", inf.stats.GA or "X", inf.stats.DF or "X", inf.stats.SV or "X", inf.stats.W or "X"))
+      table.insert(desc, string.format("[D36B3E][[84E680]APL[-] [ffffff]%s[-]] [[84E680]MOVE[-] [ffffff]%s[-]]\n[[84E680]SAVE[-] [ffffff]%s[-]] [[84E680]WOUNDS[-] [ffffff]%s[-]][-]",
+        inf.stats.APL or "X", inf.stats.M or "X", inf.stats.SV or "X", inf.stats.W or "X"))
       table.insert(desc, "[C5C5C5]"..table.concat( inf.categories, ", ").."[-]")
 
       catex(inf.weapons, "[31B32B]Weapons[-]", function(k, v)
         -- log(v)
         local vs = v.stats
-        local A = vs["A"] or '-'
-        local WB = vs["WS/BS"] or '-'
-        local D = vs["D"] or "-/-"
-        local SR = vs["SR"]
-        local CR = vs["!"]
+        local ATK = vs["A"] or '-'
+        local HIT = vs["WS/BS"] or '-'
+        local DMG = vs["D"] or "-/-"
+        local WR = vs["SR"]
+        local CR = vs["!"] or ""
+        if CR ~= nil then
+          WR = WR .. ", " .. CR
+        end
 
-        local ostr = string.format("%s\n[84E680]A[-] %s [84E680]WS/BS[-] %s [84E680]D[-] %s", v.name or "X", A or "X", WB or "X", D or "X")
+        local ostr = string.format("%s\n[84E680]ATK[-] %s [84E680]HIT[-] %s [84E680]DMG[-] %s", v.name or "X", ATK or "X", HIT or "X", DMG or "X")
 
         if SR and SR ~= '-' then
-          ostr = ostr..string.format("\n[84E680]SR[-]: %s", SR)
+          ostr = ostr..string.format("\n[84E680]WR[-]: %s", WR)
         end
 
-        if CR and CR ~= '-' then
-          ostr = ostr..string.format("\n[84E680]![-]: %s", CR)
-        end
+        -- if CR and CR ~= '-' then
+        --   ostr = ostr..string.format("\n[84E680]![-]: %s", CR)
+        -- end
 
         return ostr
       end, "\n\n")
